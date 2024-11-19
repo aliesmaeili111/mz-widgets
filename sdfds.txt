@@ -1,0 +1,4446 @@
+<?php
+// Widget mz-logo
+class mz_logo extends \Elementor\Widget_Base
+{
+
+    public function get_name()
+    {
+        return 'mz_logo';
+    }
+
+    public function get_title()
+    {
+        return esc_html__('لوگو سایت', 'textdomain');
+    }
+
+    public function get_icon()
+    {
+        return 'eicon-site-logo';
+    }
+
+    public function get_categories()
+    {
+        return ['mz-category'];
+    }
+
+    public function get_keywords()
+    {
+        return ['keyword', 'keyword'];
+    }
+
+    protected function register_controls()
+    {
+
+        $this->start_controls_section(
+            'section_content',
+            [
+                'label' => esc_html__('محتوا', 'textdomain'),
+                'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
+            ]
+        );
+
+
+        $this->add_control(
+            'custom_logo',
+            [
+                'label' => esc_html__('لوگو دلخواه', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SWITCHER,
+                'label_on' => esc_html__('بله', 'textdomain'),
+                'label_off' => esc_html__('خیر', 'textdomain'),
+                'return_value' => 'yes',
+                'default' => 'no',
+            ]
+        );
+
+        $this->add_control(
+            'logo_image',
+            [
+                'label' => esc_html__('انتخاب تصویر محصول', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::MEDIA,
+                'condition' => [
+                    'custom_logo' => 'yes',
+                ],
+                'default' => [
+                    'url' => \Elementor\Utils::get_placeholder_image_src(),
+                ],
+            ]
+        );
+
+        $this->end_controls_section();
+
+        $this->start_controls_section(
+            'section_style',
+            [
+                'label' => esc_html__('استایل', 'textdomain'),
+                'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+            ]
+        );
+
+        $this->add_control(
+            'logo_width',
+            [
+                'label' => esc_html__('عرض لوگو', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px', '%', 'custom'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                ],
+                'default' => [
+                    'unit' => '%',
+                    'size' => 100,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-logo' => 'width: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'logo_height',
+            [
+                'label' => esc_html__('ارتفاع لوگو', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px', '%', 'custom'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                ],
+                'default' => [
+                    'unit' => '%',
+                    'size' => 100,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-logo' => 'height: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->end_controls_section();
+    }
+
+    protected function render()
+    {
+        $settings = $this->get_settings_for_display();
+
+        $logo_image = $settings['logo_image']['url'];
+        if ($logo_image) {
+            $logo_image = $logo_image;
+        } else {
+            $logo_image = get_template_directory_uri() . '/assets/images/mz-logo.png';
+        }
+?>
+        <a href="<?php echo home_url(); ?>" class="mz-logo">
+            <img src="<?php echo $logo_image; ?>">
+        </a>
+    <?php
+    }
+}
+
+// Widget mz-navigation 
+class mz_navigation extends \Elementor\Widget_Base
+{
+
+    public function get_name()
+    {
+        return 'mz_navigation';
+    }
+
+    public function get_title()
+    {
+        return esc_html__('منو سایت', 'textdomain');
+    }
+
+    public function get_icon()
+    {
+        return 'eicon-nav-menu';
+    }
+
+    public function get_categories()
+    {
+        return ['mz-category'];
+    }
+
+    public function get_keywords()
+    {
+        return ['keyword', 'keyword'];
+    }
+
+    protected function register_controls()
+    {
+
+        $this->start_controls_section(
+            'section_content',
+            [
+                'label' => esc_html__('محتوا', 'textdomain'),
+                'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
+            ]
+        );
+
+        // menu type content
+        $this->add_control(
+            'menu_type',
+            [
+                'label' => esc_html__('نوع منو', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SELECT,
+                'default' => 'nav_menus',
+                'options' => [
+                    'nav_menus' => esc_html__('دریافت از فهرست های وردپرس', 'textdomain'),
+                    'cutom_menus'  => esc_html__('ایجاد منو های اختصاصی', 'textdomain'),
+                ],
+            ]
+        );
+
+        // menu_link_divder content
+        $this->add_control(
+            'menu_link_divder',
+            [
+                'label' => esc_html__('نمایش تقسیم منو', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SWITCHER,
+                'label_on' => esc_html__('بله', 'textdomain'),
+                'label_off' => esc_html__('خیر', 'textdomain'),
+                'return_value' => 'yes',
+                'default' => 'no',
+                'selectors' => [
+                    '{{WRAPPER}} .mz-menu .menu-link::after' => 'opacity:1;visibility:visible;',
+                ],
+            ]
+        );
+
+        // menu bottom line hover content
+        $this->add_control(
+            'menu_bottom_line_hover',
+            [
+                'label' => esc_html__('نمایش خط زیر منو', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SWITCHER,
+                'label_on' => esc_html__('بله', 'textdomain'),
+                'label_off' => esc_html__('خیر', 'textdomain'),
+                'return_value' => 'yes',
+                'default' => 'no',
+                'selectors' => [
+                    '{{WRAPPER}} .mz-menu .menu-link:hover::before' => 'width:50%;opacity:1;',
+                ],
+
+            ]
+        );
+
+
+        // repeat widget mz menu 
+        $this->add_control(
+            'custom_menus_repeater',
+            [
+                'label' => esc_html__('منو ها', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::REPEATER,
+                'condition' => [
+                    'menu_type' => 'cutom_menus',
+                ],
+                'fields' => [
+
+                    // title menu
+                    [
+                        'name' => 'menu_title',
+                        'label' => esc_html__('عنوان منو', 'textdomain'),
+                        'type' => \Elementor\Controls_Manager::TEXT,
+                        'default' => esc_html__('عنوان منو', 'textdomain'),
+                        'label_block' => true,
+                    ],
+
+                    // link menu
+                    [
+                        'name' => 'menu_link',
+                        'label' => esc_html__('لینک منو', 'textdomain'),
+                        'type' => \Elementor\Controls_Manager::URL,
+                        'options' => ['url', 'is_external', 'nofollow'],
+                        'default' => [
+                            'url' => '',
+                            'is_external' => true,
+                            'nofollow' => true,
+                        ],
+                        'label_block' => true,
+                    ],
+
+                    // icon_menu_show_condition
+                    [
+                        'name' => 'icon_menu_show_condition',
+                        'label' => esc_html__('نمایش آیکن منو', 'textdomain'),
+                        'type' => \Elementor\Controls_Manager::SWITCHER,
+                        'label_on' => esc_html__('بله', 'textdomain'),
+                        'label_off' => esc_html__('خیر', 'textdomain'),
+                        'return_value' => 'yes',
+                        'default' => 'yes',
+                        'label_block' => true,
+                    ],
+
+
+                    // icon menu
+                    [
+                        'name' => 'icon_menu_type',
+                        'label' => esc_html__('آیکن منو', 'textdomain'),
+                        'type' => \Elementor\Controls_Manager::ICONS,
+                        'default' => [
+                            'value' => 'mzicon-Home3',
+                        ],
+                        'condition' => [
+                            'icon_menu_show_condition' => 'yes',
+                        ],
+                        'label_block' => true,
+                    ],
+
+                    // Choose menu type
+                    [
+                        'name' => 'menus_choose_type',
+                        'label' => esc_html__('انتخاب نوع منو', 'textdomain'),
+                        'type' => \Elementor\Controls_Manager::SELECT,
+                        'default' => 'menu_link_type',
+                        'options' => [
+                            'menu_link_type' => esc_html__('منو لینک', 'textdomain'),
+                            'mega_menu_type'  => esc_html__('mega menu', 'textdomain'),
+                            'dropdown_type'  => esc_html__('منو آبشاری', 'textdomain'),
+
+                        ],
+                        'label_block' => true,
+                    ],
+
+                    // Mega menu type condition 
+                    [
+                        'name' => 'menus_choose_mega_menu_type',
+                        'label' => esc_html__('انتخاب نوع قالب از المنتور', 'textdomain'),
+                        'type' => \Elementor\Controls_Manager::SELECT,
+                        'default' => 'mega_menu_type1',
+                        'options' => [
+                            'mega_menu_type1'  => esc_html__('mega menu 1', 'textdomain'),
+                            'mega_menu_type2'  => esc_html__('mega menu 2', 'textdomain'),
+                            'mega_menu_type3'  => esc_html__('mega menu 3', 'textdomain'),
+
+                        ],
+                        'condition' => [
+                            'menus_choose_type' => "mega_menu_type",
+                        ],
+                        'label_block' => true,
+                    ],
+
+
+                    // icon_Sub_menu_show condition
+                    [
+                        'name' => 'icon_Sub_menu_show_condition',
+                        'label' => esc_html__('نمایش آیکن زیر منو', 'textdomain'),
+                        'type' => \Elementor\Controls_Manager::SWITCHER,
+                        'label_on' => esc_html__('بله', 'textdomain'),
+                        'label_off' => esc_html__('خیر', 'textdomain'),
+                        'return_value' => 'yes',
+                        'default' => 'yes',
+                        'label_block' => true,
+                        'condition' => [
+                            'menus_choose_type' => ["mega_menu_type", "dropdown_type"],
+                        ],
+                    ],
+
+
+                    // icon sub menu condition
+                    [
+                        'name' => 'icon_menu_type_mega_menu',
+                        'label' => esc_html__('آیکن زیر منو', 'textdomain'),
+                        'type' => \Elementor\Controls_Manager::ICONS,
+                        'default' => [
+                            'value' => 'mzicon-Arrow---Down-2',
+                        ],
+                        'condition' => [
+                            'menus_choose_type' => ["mega_menu_type", "dropdown_type"],
+                            'icon_Sub_menu_show_condition' => "yes",
+
+                        ],
+                        'label_block' => true,
+                    ],
+
+
+                    // Drop down type condition 
+                    [
+                        'name' => 'menus_choose_drop_down_type',
+                        'label' => esc_html__('انتخاب از فهرست ها', 'textdomain'),
+                        'type' => \Elementor\Controls_Manager::SELECT,
+                        'default' => 'drop_down_type1',
+                        'options' => [
+                            'drop_down_type1'  => esc_html__('منو آبشاری 1', 'textdomain'),
+                            'drop_down_type2'  => esc_html__('منو آبشاری 2', 'textdomain'),
+                            'drop_down_type3'  => esc_html__('منو آبشاری 3', 'textdomain'),
+
+                        ],
+                        'condition' => [
+                            'menus_choose_type' => "dropdown_type",
+                        ],
+                        'label_block' => true,
+                    ],
+
+                    // Mega menu custom width condition 
+                    [
+                        'name' => 'mega_menu_width',
+                        'label' => esc_html__('عرض mega menu', 'textdomain'),
+                        'type' => \Elementor\Controls_Manager::SELECT,
+                        'default' => 'mega_manu_full_width',
+                        'options' => [
+                            'mega_manu_full_width'  => esc_html__('تمام عرض', 'textdomain'),
+                            'mega_menu_custom'  => esc_html__('عرض سفارشی', 'textdomain'),
+                        ],
+                        'condition' => [
+                            'menus_choose_type' => "mega_menu_type",
+                        ],
+                        'label_block' => true,
+                    ],
+
+                    // Mega menu custom width slider ranger condition 
+                    [
+                        'name' => 'mega_menu_custom_slider_range',
+                        'label' => esc_html__('اندازه عرض سفارشی', 'textdomain'),
+                        'type' => \Elementor\Controls_Manager::SLIDER,
+                        'size_units' => ['px', "%"],
+                        'range' => [
+                            'px' => [
+                                'min' => 0,
+                                'max' => 2000,
+                                'step' => 1,
+                            ],
+                            '%' => [
+                                'min' => 0,
+                                'max' => 100,
+                                'step' => 1,
+                            ],
+                        ],
+                        'default' => [
+                            'unit' => 'px',
+                            'size' => 1000,
+                        ],
+                        'selectors' => [
+                            '{{WRAPPER}} .mz-mega-menu-wrapper' => 'width: {{SIZE}}{{UNIT}};',
+                        ],
+                        'condition' => [
+                            'mega_menu_width' => "mega_menu_custom",
+                        ],
+                        'label_block' => true,
+                    ],
+
+                    // change auto position mega menu
+                    [
+                        'name' => 'mega_menu_custom_position',
+                        'label' => esc_html__('موقعیت مگا منو', 'textdomain'),
+                        'type' => \Elementor\Controls_Manager::HIDDEN,
+
+                        'default' => 'absolute',
+                        'selectors' => [
+                            '{{WRAPPER}} .mz-mega-menu-wrapper' => 'position: absolute;',
+                        ],
+                        'condition' => [
+                            'menus_choose_type' => "mega_menu_type",
+                        ],
+                        'label_block' => true,
+                    ],
+
+
+
+
+
+                ],
+                'default' => [
+                    [
+                        'menu_title' => esc_html__('صفحه اصلی', 'textdomain'),
+                        'icon_menu_type_mega_menu' => esc_html__('mzicon-Arrow---Down-2', 'textdomain'),
+                    ],
+                    [
+                        'menu_title' => esc_html__('درباره ما', 'textdomain'),
+                        'icon_menu_type_mega_menu' => esc_html__('mzicon-Arrow---Down-2', 'textdomain'),
+                    ],
+                ],
+                'title_field' => '{{{ menu_title }}}',
+            ]
+        );
+
+
+        $this->end_controls_section();
+
+        // start style tab menu 
+        $this->start_controls_section(
+            'section_style',
+            [
+                'label' => esc_html__('استایل', 'textdomain'),
+                'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+            ]
+        );
+
+
+        // typographi mz menu style
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name' => 'menu-typography',
+                'selector' => '{{WRAPPER}} .mz-menu .menu-link',
+            ]
+        );
+
+
+        // border radius menu link style
+        $this->add_control(
+            'mz_menu_border_radius',
+            [
+                'label' => esc_html__('انحنای باکس منو', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%', 'custom'],
+                'default' => [
+                    'top' => 0,
+                    'right' => 0,
+                    'bottom' => 0,
+                    'left' => 0,
+                    'unit' => 'px',
+                    'isLinked' => false,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-menu .menu-link' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+
+        // border mz menu link style
+        $this->add_group_control(
+            \Elementor\Group_Control_Border::get_type(),
+            [
+                'name' => 'mz_menu_link_border',
+                'selector' => '{{WRAPPER}} .mz-menu .menu-link',
+            ]
+        );
+
+
+
+        // Width mz-menu style
+        $this->add_control(
+            'mz_menu_link_width',
+            [
+                'label' => esc_html__('عرض منو', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-menu .menu-link' => 'width: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // height mz menu link style
+        $this->add_control(
+            'mz_menu_link_height',
+            [
+                'label' => esc_html__('ارتفاع منو', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px', 'custom'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 60,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-menu .menu-link' => 'height: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // mz menu box shadow style
+        $this->add_group_control(
+            \Elementor\Group_Control_Box_Shadow::get_type(),
+            [
+                'name' => 'box_shadow_mz_menu',
+                'selector' => '{{WRAPPER}} .mz-menu .menu-link',
+            ]
+        );
+
+
+        // widget gap menu link style 
+        $this->add_control(
+            'menu_gap',
+            [
+                'label' => esc_html__('فاصله بین منو ها', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px', 'custom'],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 10,
+                ],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-menu' => 'gap: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // widget gap menu link Item style 
+        $this->add_control(
+            'menu_item_gap',
+            [
+                'label' => esc_html__('فاصله بین آیتم منو ها', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px', 'custom'],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 10,
+                ],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-menu .menu-link' => 'gap: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // start controll menu stlye (normal , hover)
+        $this->start_controls_tabs('menu_style');
+
+        // tab normal menu 
+        $this->start_controls_tab(
+            'menu_tab_normal',
+            [
+                'label' => esc_html__('عادی', 'textdomain'),
+            ]
+        );
+
+        // bg color text menu link style normal
+        $this->add_control(
+            'mz_menu_background',
+            [
+                'label' => esc_html__('پس زمینه منو ', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .mz-menu .menu-link' => 'background: {{VALUE}}',
+                ],
+            ]
+        );
+
+        // color text menu link style normal
+        $this->add_control(
+            'mz_menu_text_color',
+            [
+                'label' => esc_html__('رنگ متن منو ', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .mz-menu .menu-link' => 'color: {{VALUE}}',
+                ],
+                'default' => "#C0C0C1"
+            ]
+        );
+
+        // color icon menu link normal
+        $this->add_control(
+            'mz_menu_icon_color',
+            [
+                'label' => esc_html__('رنگ آیکن', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .mz-menu .menu-link i' => 'color: {{VALUE}}',
+                ],
+                'default' => "#C0C0C1"
+            ]
+        );
+
+        $this->end_controls_tab();
+
+
+
+        // tab hover menu link
+        $this->start_controls_tab(
+            'menu_link_hover',
+            [
+                'label' => esc_html__('هاور', 'textdomain'),
+            ]
+        );
+
+        // color text hover menu link
+        $this->add_control(
+            'mz_menu_text_color_hover',
+            [
+                'label' => esc_html__('رنگ متن منو (Hover)', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .mz-menu .menu-link:hover' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        // bg color text hover menu link
+        $this->add_control(
+            'mz_menu_background_color_hover',
+            [
+                'label' => esc_html__('رنگ پس زمینه منو (Hover)', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .mz-menu .menu-link:hover' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        // icon hover menu link
+        $this->add_control(
+            'mz_menu_icon_color_hover',
+            [
+                'label' => esc_html__('رنگ آیکن(HOVER)', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .mz-menu .menu-link:hover i' => 'color: {{VALUE}}',
+                ],
+            ]
+        );
+
+        $this->end_controls_tab();
+
+        // end controll menu stlye (normal , hover)
+
+
+
+
+        $this->end_controls_section();
+
+
+        $this->start_controls_section(
+            'section_style_divider',
+            [
+                'label' => esc_html__('استایل تقسیم کننده', 'textdomain'),
+                'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+                'condition' => [
+                    'menu_link_divder' => "yes",
+                ],
+            ]
+        );
+
+        // change bg color divider menu link after
+        $this->add_control(
+            'mz_menu_background_color_divider',
+            [
+                'label' => esc_html__('رنگ پس زمینه تقسیم کننده', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .mz-menu .menu-link:after' => 'border-left-color: {{VALUE}};',
+                ],
+                'condition' => [
+                    'menu_link_divder' => "yes",
+                ],
+            ]
+        );
+
+        // widget width menu link divider style  after
+        $this->add_control(
+            'mz_menu_width_divider',
+            [
+                'label' => esc_html__('عرض تقسیم کننده', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px', 'custom'],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 1,
+                ],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-menu .menu-link:after' => 'border-left-width: {{SIZE}}{{UNIT}};',
+                ],
+                'condition' => [
+                    'menu_link_divder' => "yes",
+                ],
+            ]
+        );
+
+        // widget height menu link divider style after
+        $this->add_control(
+            'mz_menu_height_divider',
+            [
+                'label' => esc_html__('ارتفاع تقسیم کننده', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px', '%', 'custom'],
+                'default' => [
+                    'unit' => '%',
+                    'size' => 70,
+                ],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                    '%' => [
+                        'min' => 0,
+                        'max' => 100,
+                        'step' => 1,
+                    ],
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-menu .menu-link:after' => 'height: {{SIZE}}{{UNIT}};',
+                ],
+                'condition' => [
+                    'menu_link_divder' => "yes",
+                ],
+            ]
+        );
+
+
+        $this->end_controls_section();
+
+        $this->start_controls_section(
+            'section_style_bottom_line_hover_after',
+            [
+                'label' => esc_html__('استایل خط زیر منو', 'textdomain'),
+                'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+                'condition' => [
+                    'menu_bottom_line_hover' => "yes",
+                ],
+            ]
+        );
+
+        // change bg color bottom line menu before
+        $this->add_control(
+            'mz_menu_bottom_line_backgorund_color',
+            [
+                'label' => esc_html__('رنگ  خط زیر منو', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .mz-menu .menu-item .menu-link::before' => 'background-color: {{VALUE}};',
+                ],
+                'condition' => [
+                    'menu_bottom_line_hover' => "yes",
+                ],
+            ]
+        );
+
+
+        // widget width menu bottom line hover before
+        $this->add_control(
+            'mz_menu_width_bottom_line_hover_before',
+            [
+                'label' => esc_html__('عرض خط زیر منو', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px', '%', 'custom'],
+                'default' => [
+                    'unit' => '%',
+                    'size' => 50,
+                ],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                    '%' => [
+                        'min' => 0,
+                        'max' => 100,
+                        'step' => 1,
+                    ],
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-menu .menu-item .menu-link::before' => 'width: {{SIZE}}{{UNIT}};',
+                ],
+                'condition' => [
+                    'menu_bottom_line_hover' => "yes",
+                ],
+            ]
+        );
+
+
+        // widget height menu bottom line hover before
+        $this->add_control(
+            'mz_menu_height_bottom_line_hover_before',
+            [
+                'label' => esc_html__('ارتفاع خط زیر منو', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px', '%', 'custom'],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 1.5,
+                ],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                    '%' => [
+                        'min' => 0,
+                        'max' => 100,
+                        'step' => 1,
+                    ],
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-menu .menu-item .menu-link::before' => 'height: {{SIZE}}{{UNIT}};',
+                ],
+                'condition' => [
+                    'menu_bottom_line_hover' => "yes",
+                ],
+            ]
+        );
+        $this->end_controls_section();
+    }
+
+    protected function render()
+    {
+        $settings = $this->get_settings_for_display();
+    ?>
+
+        <link rel="stylesheet" href="<?php echo get_template_directory_uri(); ?>/navigation/mz-navigation.css">
+        <link rel="stylesheet" href="<?php echo get_template_directory_uri(); ?>/mz-mega-menu-wrapper/mz-mega-menu-wrapper.css">
+
+
+        <div class="mz-menu">
+            <?php if ($settings['custom_menus_repeater']) : ?>
+                <?php foreach ($settings['custom_menus_repeater'] as $item) : ?>
+                    <div class="menu-item">
+                        <a href="<?php echo $item['menu_link']['url']; ?>" class="menu-link">
+                            <?php if ($item['icon_menu_show_condition'] === 'yes') : ?>
+                                <i class="<?php echo $item["icon_menu_type"]['value']; ?>"></i>
+                            <?php endif; ?>
+                            <?php echo $item['menu_title']; ?>
+                            <?php if (($item['menus_choose_type'] === 'dropdown_type' || $item['menus_choose_type'] === 'mega_menu_type') && $item['icon_Sub_menu_show_condition'] === 'yes') : ?>
+                                <i class="<?php echo $item["icon_menu_type_mega_menu"]['value']; ?>"></i>
+                            <?php endif; ?>
+                        </a>
+                        <?php if ($item['menus_choose_type'] === 'dropdown_type') : ?>
+                            <div class="dropdown-menu">
+                                <ul class="sub-menu">
+                                    <li>
+                                        <a href="#">
+                                            سطح اول
+                                            <i class="mzicon-Arrow---Down-2"></i>
+                                        </a>
+                                        <ul class="sub-menu">
+                                            <li>
+                                                <a href="#">سطح 1
+                                                    <i class="mzicon-Arrow---Down-2"></i>
+                                                </a>
+
+                                                <ul class="sub-menu">
+                                                    <li>
+                                                        <a href="#">سطح 2
+                                                            <i class="mzicon-Arrow---Down-2"></i>
+                                                        </a>
+                                                        <ul class="sub-menu">
+                                                            <li>
+                                                                <a href="#">سطح 2
+                                                                    <i class="mzicon-Arrow---Down-2"></i>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#">سطح 3
+                                                                    <i class="mzicon-Arrow---Down-2"></i>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#">سطح 4
+                                                                    <i class="mzicon-Arrow---Down-2"></i>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#">سطح 5
+                                                                    <i class="mzicon-Arrow---Down-2"></i>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#">سطح 6
+                                                                    <i class="mzicon-Arrow---Down-2"></i>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#">سطح 7
+                                                                    <i class="mzicon-Arrow---Down-2"></i>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#">سطح 3
+                                                            <i class="mzicon-Arrow---Down-2"></i>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#">سطح 4
+                                                            <i class="mzicon-Arrow---Down-2"></i>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#">سطح 5
+                                                            <i class="mzicon-Arrow---Down-2"></i>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#">سطح 6
+                                                            <i class="mzicon-Arrow---Down-2"></i>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#">سطح 7
+                                                            <i class="mzicon-Arrow---Down-2"></i>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <a href="#">سطح 2
+                                                    <i class="mzicon-Arrow---Down-2"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#">سطح 3
+                                                    <i class="mzicon-Arrow---Down-2"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#">سطح 4
+                                                    <i class="mzicon-Arrow---Down-2"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#">سطح 5
+                                                    <i class="mzicon-Arrow---Down-2"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#">سطح 6
+                                                    <i class="mzicon-Arrow---Down-2"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#">سطح 7
+
+                                                    <i class="mzicon-Arrow---Down-2"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            سطح دوم
+                                            <i class="mzicon-Arrow---Down-2"></i>
+                                        </a>
+                                        <ul class="sub-menu">
+                                            <li>
+                                                <a href="#">سطح 1
+                                                    <i class="mzicon-Arrow---Down-2"></i>
+                                                </a>
+
+                                                <ul class="sub-menu">
+                                                    <li>
+                                                        <a href="#">سطح 2
+                                                            <i class="mzicon-Arrow---Down-2"></i>
+                                                        </a>
+                                                        <ul class="sub-menu">
+                                                            <li>
+                                                                <a href="#">asdsadas 2
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#">سطح 3
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#">سطح 4
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#">سطح 5
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#">سطح 6
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#">سطح 7
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#">سطح 3
+                                                            <i class="mzicon-Arrow---Down-2"></i>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#">سطح 4
+                                                            <i class="mzicon-Arrow---Down-2"></i>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#">سطح 5
+                                                            <i class="mzicon-Arrow---Down-2"></i>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#">سطح 6
+                                                            <i class="mzicon-Arrow---Down-2"></i>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#">سطح 7
+                                                            <i class="mzicon-Arrow---Down-2"></i>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <a href="#">سطح 2
+                                                    <i class="mzicon-Arrow---Down-2"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#">سطح 3
+                                                    <i class="mzicon-Arrow---Down-2"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#">سطح 4
+                                                    <i class="mzicon-Arrow---Down-2"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#">سطح 5
+                                                    <i class="mzicon-Arrow---Down-2"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#">سطح 6
+                                                    <i class="mzicon-Arrow---Down-2"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#">سطح 7
+
+                                                    <i class="mzicon-Arrow---Down-2"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            سطح اول
+                                            <i class="mzicon-Arrow---Down-2"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            سطح اول
+                                            <i class="mzicon-Arrow---Down-2"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            سطح اول
+                                            <i class="mzicon-Arrow---Down-2"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            سطح اول
+                                            <i class="mzicon-Arrow---Down-2"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            سطح اول
+                                            <i class="mzicon-Arrow---Down-2"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        <?php elseif ($item['menus_choose_type'] === 'mega_menu_type') : ?>
+                            <div class="mz-mega-menu-wrapper" data-mega-menu-action="hover">
+                                <div class="mz-mega-menus">
+                                    <div class="mz-mega-menu" data-id="1">
+                                        لوازم جانبی خودرو
+                                    </div>
+                                    <div class="mz-mega-menu" data-id="2">
+                                        مد و پوشاک
+                                    </div>
+                                    <div class="mz-mega-menu" data-id="3">
+                                        هدفون های خارجی
+                                    </div>
+                                    <div class="mz-mega-menu" data-id="4">
+                                        اسباب بازی کودک
+                                    </div>
+                                    <div class="mz-mega-menu" data-id="5">
+                                        لوازم کودک
+                                    </div>
+                                </div>
+
+                                <div class="mz-sub-menus" data-show-id="1">
+
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            1 تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            2 سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            3 لوازم موتور
+                                        </a>
+                                    </div>
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل1
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+
+                                </div>
+                                <div class="mz-sub-menus" data-show-id="2">
+
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            4 تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            5 سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            6 لوازم موتور
+                                        </a>
+                                    </div>
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+
+                                </div>
+                                <div class="mz-sub-menus" data-show-id="3">
+
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            7 تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            8 سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            9 لوازم موتور
+                                        </a>
+                                    </div>
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+
+                                </div>
+                                <div class="mz-sub-menus" data-show-id="4">
+
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+
+                                </div>
+                                <div class="mz-sub-menus" data-show-id="5">
+
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+                                    <div class="mz-sub-menu">
+                                        <a href="#" class="sub-menu-title">
+                                            لوازم جانبی
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            تزییینات اتوموبیل
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            سیستم صوتی و تصویری
+                                        </a>
+                                        <a href="#" class="mz-sub-menu-item">
+                                            لوازم موتور
+                                        </a>
+                                    </div>
+
+                                </div>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
+
+        <script src="<?php echo get_template_directory_uri(); ?>/mz-mega-menu-wrapper/mz-mega-menu-wrapper.js"></script>
+
+
+    <?php
+
+    }
+}
+
+// Widgwts svg frame
+class mz_svg_frame extends \Elementor\Widget_Base
+{
+
+    public function get_name()
+    {
+        return 'mz_svg_frame';
+    }
+
+    public function get_title()
+    {
+        return esc_html__('ناحیه svg', 'textdomain');
+    }
+
+    public function get_icon()
+    {
+        return 'eicon-site-logo';
+    }
+
+    public function get_categories()
+    {
+        return ['mz-category'];
+    }
+
+    public function get_keywords()
+    {
+        return ['keyword', 'keyword'];
+    }
+
+    protected function register_controls()
+    {
+
+        $this->start_controls_section(
+            'section_content',
+            [
+                'label' => esc_html__('محتوا', 'textdomain'),
+                'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
+            ]
+        );
+
+        $this->add_control(
+            'custom_svg',
+            [
+                'label' => esc_html__('کد دلخواه svg', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::CODE,
+                'language' => 'html',
+                'rows' => 20,
+            ]
+        );
+
+        $this->end_controls_section();
+
+        $this->start_controls_section(
+            'section_style',
+            [
+                'label' => esc_html__('Style', 'textdomain'),
+                'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+            ]
+        );
+
+        $this->add_control(
+            'svg_width',
+            [
+                'label' => esc_html__('عرض svg', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px', '%', 'em', 'rem', 'custom'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                    '%' => [
+                        'min' => 0,
+                        'max' => 100,
+                    ],
+                ],
+                'default' => [
+                    'unit' => '%',
+                    'size' => 100,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-svg svg' => 'width: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'svg_height',
+            [
+                'label' => esc_html__('ارتفاع svg', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px', '%', 'em', 'rem', 'custom'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                    '%' => [
+                        'min' => 0,
+                        'max' => 100,
+                    ],
+                ],
+                'default' => [
+                    'unit' => '%',
+                    'size' => 100,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-svg svg' => 'height: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'svg_fill_color',
+            [
+                'label' => esc_html__('رنگ fill svg', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'default' => "#DFB568",
+                'selectors' => [
+                    '{{WRAPPER}} .mz-svg svg' => 'fill: {{VALUE}}',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'svg_path_color',
+            [
+                'label' => esc_html__('رنگ path svg', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .mz-svg svg path' => 'fill: {{VALUE}}',
+                ],
+            ]
+        );
+
+        $this->end_controls_section();
+    }
+
+    protected function render()
+    {
+        $settings = $this->get_settings_for_display();
+    ?>
+        <div class="mz-svg">
+            <?php
+            echo $settings['custom_svg'];
+            ?>
+        </div>
+    <?php
+    }
+}
+
+// Widget mz-button-link
+class MzButtonLink extends \Elementor\Widget_Base
+{
+    public function get_name()
+    {
+        return 'mz_button_link';
+    }
+
+    public function get_title()
+    {
+        return esc_html__('لینک های دکمه', 'textdomain');
+    }
+
+    public function get_icon()
+    {
+        return 'eicon-editor-unlink';
+    }
+
+    public function get_categories()
+    {
+        return ['mz-category'];
+    }
+
+    public function get_keywords()
+    {
+        return ['keyword', 'keyword'];
+    }
+
+    protected function register_controls()
+    {
+
+        $this->start_controls_section(
+            'section_content',
+            [
+                'label' => esc_html__('محتوا', 'textdomain'),
+                'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
+            ]
+        );
+
+        // url
+        $this->add_control(
+            'mz_button_link_url',
+            [
+                'label' => esc_html__('لینک دکمه', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::URL,
+                'options' => ['url', 'is_external', 'nofollow'],
+                'default' => [
+                    'url' => '',
+                    'is_external' => true,
+                    'nofollow' => true,
+                ],
+                'label_block' => true,
+            ]
+        );
+
+        // Show btn link title style
+        $this->add_control(
+            'mz_button_link_title_show_condition',
+            [
+                'label' => esc_html__('نمایش متن لینک', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SWITCHER,
+                'label_on' => esc_html__('بله', 'textdomain'),
+                'label_off' => esc_html__('خیر', 'textdomain'),
+                'return_value' => 'yes',
+                'default' => 'yes',
+            ]
+        );
+
+        // Show btn link icon style
+        $this->add_control(
+            'mz_button_link_icon_show_condition',
+            [
+                'label' => esc_html__('نمایش متن لینک', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SWITCHER,
+                'label_on' => esc_html__('بله', 'textdomain'),
+                'label_off' => esc_html__('خیر', 'textdomain'),
+                'return_value' => 'yes',
+                'default' => 'yes',
+            ]
+        );
+
+
+        $this->add_control(
+            'mz_button_link_title',
+            [
+                'label' => esc_html__('عنوان لینک دکمه', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::TEXT,
+                'default' =>
+                "پیگیری سفارشات",
+                'placeholder' => esc_html__('متن لینک دکمه را وارد نمایید', 'textdomain'),
+                'condition' => [
+                    'mz_button_link_title_show_condition' => "yes",
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'mz_button_link_icon',
+            [
+                'label' => esc_html__('آیکن لینک دکمه', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::ICONS,
+                'default' => [
+                    'value' => "mzicon-fi-rr-shopping-cart",
+                ],
+                'condition' => [
+                    'mz_button_link_icon_show_condition' => "yes",
+                ],
+            ]
+        );
+
+
+
+        $this->end_controls_section();
+
+        $this->start_controls_section(
+            'section_style',
+            [
+                'label' => esc_html__('استایل', 'textdomain'),
+                'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+            ]
+        );
+
+        // Width btn link
+        $this->add_control(
+            'mz_button_link_width',
+            [
+                'label' => esc_html__('عرض لینک دکمه', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 175,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-btn-link' => 'width: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // height btn link
+        $this->add_control(
+            'mz_button_link_height',
+            [
+                'label' => esc_html__('ارتفاع لینک دکمه', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px', 'custom'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 60,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-btn-link' => 'height: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // font-size icon btn link
+        $this->add_control(
+            'mz_button_link_font_size_icon',
+            [
+                'label' => esc_html__('سایز آیکن لینک دکمه', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 20,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-btn-link .link-icon' => 'font-size: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // background btn link
+        $this->add_control(
+            'mz_button_link_background_color',
+            [
+                'label' => esc_html__('رنگ پس زمینه لینک دکمه', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .mz-btn-link' => 'background: {{VALUE}}',
+                ],
+            ]
+        );
+
+
+        // border radius btn link style
+        $this->add_control(
+            'mz_button_link_border_radius',
+            [
+                'label' => esc_html__('انحنای باکس لینک دکمه', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%', 'custom'],
+                'default' => [
+                    'top' => 100,
+                    'right' => 100,
+                    'bottom' => 100,
+                    'left' => 100,
+                    'unit' => 'em',
+                    'isLinked' => false,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-btn-link' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // border btn link
+        $this->add_group_control(
+            \Elementor\Group_Control_Border::get_type(),
+            [
+                'name' => 'mz_button-link_border',
+                'selector' => '{{WRAPPER}} .mz-btn-link',
+            ]
+        );
+
+        // Typography btn link
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name' => 'mz_button_link',
+                'selector' => '{{WRAPPER}} .mz-btn-link .link-text',
+            ]
+        );
+        // button text color
+        $this->add_control(
+            'mz_button_link_color',
+            [
+                'label' => esc_html__('رنگ پیشفرض لینک', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'default' => "#939394",
+                'selectors' => [
+                    '{{WRAPPER}} .mz-btn-link .link-text' => 'color: {{VALUE}}',
+                ],
+                'condition' => [
+                    'mz_button_link_title_show_condition' => "yes",
+                ],
+
+            ]
+        );
+        // button link icon color
+        $this->add_control(
+            'mz_button_link_icon_color',
+            [
+                'label' => esc_html__('رنگ پیشفرض لینک آیکون', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'default' => "#939394",
+                'selectors' => [
+                    '{{WRAPPER}} .mz-btn-link .link-icon' => 'color: {{VALUE}}',
+                ],
+                'condition' => [
+                    'mz_button_link_icon_show_condition' => "yes",
+                ],
+            ]
+        );
+
+        // btn link box shadow style
+        $this->add_group_control(
+            \Elementor\Group_Control_Box_Shadow::get_type(),
+            [
+                'name' => 'box_shadow_btn_link',
+                'selector' => '{{WRAPPER}} .mz-btn-link',
+            ]
+        );
+
+        $this->add_control(
+            'mz_button_link_gap',
+            [
+                'label' => esc_html__('فاصله بین لینک دکمه ها', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px', '%', 'em', 'rem', 'custom'],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 10,
+                ],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                    '%' => [
+                        'min' => 0,
+                        'max' => 100,
+                    ],
+                ],
+
+                'selectors' => [
+                    '{{WRAPPER}} .mz-btn-link' => 'gap: {{SIZE}}{{UNIT}};',
+                ],
+                'condition' => [
+                    'mz_button_link_icon_show_condition' => "yes",
+                ],
+            ]
+        );
+
+        $this->end_controls_section();
+    }
+
+    protected function render()
+    {
+        $settings = $this->get_settings_for_display();
+        $mz_button_link_icon_show_condition = $settings['mz_button_link_icon_show_condition'];
+        $mz_button_link_title_show_condition = $settings['mz_button_link_title_show_condition'];
+
+    ?>
+
+        <a href="<?php echo $settings['mz_button_link_url']['url']; ?>" class="mz-btn-link">
+
+            <?php if ($mz_button_link_icon_show_condition === 'yes') { ?>
+                <div class="link-icon">
+                    <i class="<?php echo $settings["mz_button_link_icon"]['value']; ?>"></i>
+                </div>
+            <?php } ?>
+
+            <?php if ($mz_button_link_title_show_condition === 'yes') { ?>
+                <div class="link-text">
+                    <?php echo $settings['mz_button_link_title']; ?>
+                </div>
+            <?php } ?>
+
+        </a>
+
+        <?php
+
+    }
+}
+
+// Widget mz-cart-buttons
+class mzCartButtons extends \Elementor\Widget_Base
+{
+    public function get_name()
+    {
+        return 'mz_cart_buttons';
+    }
+
+    public function get_title()
+    {
+        return esc_html__('دکمه سبد خرید', 'textdomain');
+    }
+
+    public function get_icon()
+    {
+        return 'eicon-cart-solid';
+    }
+
+    public function get_categories()
+    {
+        return ['mz-category'];
+    }
+
+    public function get_keywords()
+    {
+        return ['keyword', 'keyword'];
+    }
+
+    protected function register_controls()
+    {
+
+        $this->start_controls_section(
+            'section_content',
+            [
+                'label' => esc_html__('محتوا', 'textdomain'),
+                'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
+            ]
+        );
+
+        // Custom label mz cart button title
+        $this->add_control(
+            'custom_mz_cart_buttons_title_label',
+            [
+                'label' => esc_html__('نمایش عنوان سبد خرید دلخواه', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SWITCHER,
+                'label_on' => esc_html__('بله', 'textdomain'),
+                'label_off' => esc_html__('خیر', 'textdomain'),
+                'return_value' => 'yes',
+                'default' => 'yes',
+                'condition' => [
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_1',
+                ],
+            ]
+        );
+
+        // Custom hide icon mz cart button 3
+        $this->add_control(
+            'custom_mz_cart_buttons_hide_icon',
+            [
+                'label' => esc_html__('نمایش آیکن سبد خرید', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SWITCHER,
+                'label_on' => esc_html__('بله', 'textdomain'),
+                'label_off' => esc_html__('خیر', 'textdomain'),
+                'return_value' => 'yes',
+                'default' => 'yes',
+                'condition' => [
+                    'custom_mz_cart_buttons_choose' => ['mz_cart_buttons_2', 'mz_cart_buttons_3'],
+                ],
+            ]
+        );
+
+        // menu choose
+        $this->add_control(
+            'custom_mz_cart_buttons_choose',
+            [
+                'label' => esc_html__('انتخاب نوع سبد خرید', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SELECT,
+                'default' => 'mz_cart_buttons_1',
+                'options' => [
+                    'mz_cart_buttons_1' => esc_html__('سبد خرید شماره 1', 'textdomain'),
+                    'mz_cart_buttons_2' => esc_html__('سبد خرید شماره 2', 'textdomain'),
+                    'mz_cart_buttons_3'  => esc_html__('سبد خرید شماره 3', 'textdomain'),
+                ],
+            ]
+        );
+
+        // mz_cart_buttons title
+        $this->add_control(
+            'mz_cart_buttons_title',
+            [
+                'label' => esc_html__('عنوان دکمه سبد خرید', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::TEXT,
+                'condition' => [
+                    'custom_mz_cart_buttons_title_label' => 'yes',
+                ],
+                'default' =>
+                "سبد خرید",
+                'placeholder' => esc_html__('متن دکمه سبد خرید را وارد نمایید', 'textdomain'),
+            ]
+        );
+
+        // mz_cart_buttons_3 title
+        $this->add_control(
+            'mz_cart_buttons_title_3',
+            [
+                'label' => esc_html__('زیر متن دکمه سبد خرید', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::TEXT,
+                'condition' => [
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_3',
+                ],
+                'default' =>
+                "2 محصول",
+                'placeholder' => esc_html__('زیر متن دکمه سبد خرید را وارد نمایید', 'textdomain'),
+            ]
+        );
+
+        // mz_cart_buttons custom icon
+        $this->add_control(
+            'mz_cart_buttons_icon',
+            [
+                'label' => esc_html__('آیکن سبد خرید', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::ICONS,
+                'condition' => [
+                    'custom_mz_cart_buttons_hide_icon' => 'yes',
+                ],
+                'default' => [
+                    'value' => "mzicon-fi-rr-shopping-cart",
+                ],
+            ]
+        );
+
+
+        // mz_cart_buttons custom icon
+        $this->add_control(
+            'mz_cart_buttons_3_icon',
+            [
+                'label' => esc_html__('آیکن سبد خرید شماره 3', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::ICONS,
+                'condition' => [
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_3',
+                    'custom_mz_cart_buttons_hide_icon' => 'yes',
+                ],
+
+                'default' => [
+                    'value' => "mzicon-fi-rr-shopping-cart",
+                ],
+            ]
+        );
+
+
+        $this->end_controls_section();
+
+        $this->start_controls_section(
+            'section_style',
+            [
+                'label' => esc_html__('استایل', 'textdomain'),
+                'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+            ]
+        );
+
+        // custom_mz_cart_buttons_hide_icon_text_center
+        $this->add_control(
+            'custom_mz_cart_buttons_hide_icon_text_center',
+            [
+                'label' => esc_html__('تراز کردن متن دکمه', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::CHOOSE,
+                'condition' => [
+                    'custom_mz_cart_buttons_hide_icon' => '',
+                ],
+                'options' => [
+                    'right' => [
+                        'title' => esc_html__('راست', 'textdomain'),
+                    ],
+                    'center' => [
+                        'title' => esc_html__('وسط', 'textdomain'),
+                    ],
+                    'left' => [
+                        'title' => esc_html__('چپ', 'textdomain'),
+                    ],
+                ],
+                'default' => 'center',
+                'toggle' => true,
+                'selectors' => [
+                    '{{WRAPPER}} .mz-cart-btn' => 'justify-content: {{VALUE}};',
+                ],
+            ]
+        );
+
+
+        // Width
+        $this->add_control(
+            'mz_cart_buttons_width',
+            [
+                'label' => esc_html__('عرض دکمه سبد خرید', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'condition' => [
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_1',
+                ],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 85,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-cart-btn' => 'width: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // height
+        $this->add_control(
+            'mz_cart_buttons_height',
+            [
+                'label' => esc_html__('ارتفاع دکمه سبد خرید', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'condition' => [
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_1',
+                ],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 85,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-cart-btn' => 'height: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // font-size icon
+        $this->add_control(
+            'mz_cart_buttons_font_size_icon',
+            [
+                'label' => esc_html__('سایز آیکن دکمه سبد خرید', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'condition' => [
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_1',
+                ],
+                'size_units' => ['px'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 30,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-cart-btn .cart-icon i' => 'font-size: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // background
+        $this->add_control(
+            'mz_cart_buttons_background_color',
+            [
+                'label' => esc_html__('رنگ پس زمینه دکمه سبد خرید', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'default' => "#F8F8F8",
+                'selectors' => [
+                    '{{WRAPPER}} .mz-cart-btn' => 'background: {{VALUE}}',
+                ],
+            ]
+        );
+
+        // background span number
+        $this->add_control(
+            'mz_cart_buttons_background_color_span',
+            [
+                'label' => esc_html__('رنگ پس زمینه دکمه عدد سبد خرید', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'condition' => [
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_1',
+                ],
+                'default' => "#C65B5B",
+                'selectors' => [
+                    '{{WRAPPER}} .mz-cart-btn span' => 'background: {{VALUE}}',
+                ],
+            ]
+        );
+
+        // border radius mz cart buttons style
+        $this->add_control(
+            'mz_cart_buttons_border_radius',
+            [
+                'label' => esc_html__('انحنای باکس دکمه سبد خرید', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%', 'custom'],
+                'default' => [
+                    'top' => 100,
+                    'right' => 100,
+                    'bottom' => 100,
+                    'left' => 100,
+                    'unit' => 'px',
+                    'isLinked' => false,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-cart-btn' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // border
+        $this->add_group_control(
+            \Elementor\Group_Control_Border::get_type(),
+            [
+                'name' => 'mz_cart_buttons_border',
+                'selector' => '{{WRAPPER}} .mz-cart-btn',
+            ]
+        );
+        // Typography
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name' => 'mz_cart_buttons',
+                'selector' => '{{WRAPPER}} .mz-cart-btn .cart-text',
+                'condition' => [
+                    'custom_mz_cart_buttons_title_label' => 'yes',
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_1',
+                ],
+            ]
+        );
+
+        // mz_cart_buttons text color
+        $this->add_control(
+            'mz_cart_buttons_color',
+            [
+                'label' => esc_html__('رنگ پیشفرض متن دکمه سبد خرید', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'default' => "#939394",
+                'condition' => [
+                    'custom_mz_cart_buttons_title_label' => 'yes',
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_1',
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-cart-btn .cart-text' => 'color: {{VALUE}}',
+                ],
+            ]
+        );
+
+        // mz_cart_buttons icon color
+        $this->add_control(
+            'mz_cart_buttons_icon_color',
+            [
+                'label' => esc_html__('رنگ پیشفرض آیکن سبد خرید', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'default' => "#939394",
+                'selectors' => [
+                    '{{WRAPPER}} .mz-cart-btn .cart-icon i' => 'color: {{VALUE}}',
+                ],
+            ]
+        );
+
+        // mz_cart_buttons icon color
+        $this->add_control(
+            'mz_cart_buttons_span_color',
+            [
+                'label' => esc_html__('رنگ پیشفرض عدد سبد خرید', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'default' => "#ffffff",
+                'condition' => [
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_1',
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-cart-btn span' => 'color: {{VALUE}}',
+                ],
+            ]
+        );
+
+        // Width span number
+        $this->add_control(
+            'mz_cart_buttons_span_width',
+            [
+                'label' => esc_html__('عرض دکمه عدد سبد خرید', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'condition' => [
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_1',
+                ],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                    '%' => [
+                        'min' => 0,
+                        'max' => 100,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 20,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-cart-btn span' => 'width: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // height span number
+        $this->add_control(
+            'mz_cart_buttons_span_height',
+            [
+                'label' => esc_html__('ارتفاع دکمه عدد سبد خرید', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'condition' => [
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_1',
+                ],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                    '%' => [
+                        'min' => 0,
+                        'max' => 100,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 20,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-cart-btn span' => 'height: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // border radius span number
+        $this->add_control(
+            'mz_cart_buttons_span_border_radius',
+            [
+                'label' => esc_html__('انحنا باکس دکمه عدد سبد خرید', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'condition' => [
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_1',
+                ],
+                'size_units' => ['px'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 150,
+                        'step' => 1,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 100,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-cart-btn span' => 'border-radius: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        //  mz_cart_buttons_span_inset
+        $this->add_control(
+            'mz_cart_buttons_span_inset',
+            [
+                'label' => esc_html__('موقعیت دهی دکمه عدد سبد خرید', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px'],
+                'condition' => [
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_1',
+                ],
+                'default' => [
+                    'top' => -1,
+                    'right' => 5,
+                    'bottom' => 0,
+                    'left' => 0,
+                    'unit' => 'px',
+                    'isLinked' => false,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-cart-btn span' => 'inset: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        //mz_cart_buttons_box_shadow
+        $this->add_group_control(
+            \Elementor\Group_Control_Box_Shadow::get_type(),
+            [
+                'name' => 'box_shadow_add_to_cart',
+                'selector' => '{{WRAPPER}} .mz-cart-btn',
+            ]
+        );
+
+        //  mz_cart_buttons_gap
+        $this->add_control(
+            'mz_cart_buttons_gap',
+            [
+                'label' => esc_html__('فاصله بین آیتم ها', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px', '%', 'em', 'rem', 'custom'],
+                'condition' => [
+                    'custom_mz_cart_buttons_title_label' => 'yes',
+                ],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 100,
+                        'step' => 1,
+                    ],
+                    '%' => [
+                        'min' => 0,
+                        'max' => 100,
+                    ],
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-cart-btn' => 'gap: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->end_controls_section();
+
+
+        // style add to cart 2
+        $this->start_controls_section(
+            'section_style_2_mz_cart_buttons',
+            [
+                'label' => esc_html__('استایل سبد خرید شماره 2', 'textdomain'),
+                'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+                'condition' => [
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_2',
+                ],
+            ]
+        );
+
+
+        // Width add to cart 2
+        $this->add_control(
+            'mz_cart_buttons_2_width',
+            [
+                'label' => esc_html__('عرض دکمه سبد خرید شماره 2', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'condition' => [
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_2',
+                ],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 190,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-cart-btn' => 'width: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // height add to cart 2
+        $this->add_control(
+            'mz_cart_buttons_2_height',
+            [
+                'label' => esc_html__('ارتفاع دکمه سبد خرید شماره 2', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'condition' => [
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_2',
+                ],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 60,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-cart-btn' => 'height: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // font-size icon add to cart 2
+        $this->add_control(
+            'mz_cart_buttons_2_font_size_icon',
+            [
+                'label' => esc_html__('سایز آیکن دکمه سبد خرید شماره 2', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'condition' => [
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_2',
+                ],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 20,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-cart-btn .cart-shopping .cart-icon' => 'font-size: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // mz_cart_buttons 2 text color add to cart 2
+        $this->add_control(
+            'mz_cart_buttons_2_color',
+            [
+                'label' => esc_html__('رنگ پیشفرض متن دکمه سبد خرید شماره 2', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'default' => "#939394",
+                'condition' => [
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_2',
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-cart-btn .cart-title' => 'color: {{VALUE}}',
+                ],
+            ]
+        );
+
+
+        // mz_cart_buttons icon color add to cart 2
+        $this->add_control(
+            'mz_cart_buttons_2_div_color',
+            [
+                'label' => esc_html__('رنگ پیشفرض عدد سبد خرید شماره 2', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'default' => "#44B772",
+                'condition' => [
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_2',
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-cart-btn .cart-shopping .number-cart' => 'color: {{VALUE}}',
+                ],
+            ]
+        );
+
+        // background div number-cart add to cart 2
+        $this->add_control(
+            'mz_cart_buttons_2_background_color_number_cart',
+            [
+                'label' => esc_html__('رنگ پس زمینه دکمه عدد سبد خرید شماره 2', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'condition' => [
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_2',
+                ],
+                'default' => "#FFFFFF",
+                'selectors' => [
+                    '{{WRAPPER}} .mz-cart-btn .cart-shopping .number-cart' => 'background: {{VALUE}}',
+                ],
+            ]
+        );
+
+        // background div number-cart add to cart 2
+        $this->add_control(
+            'mz_cart_buttons_2_background_color_cart_shopping',
+            [
+                'label' => esc_html__('رنگ پس زمینه دکمه سبد خرید شماره 2', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'condition' => [
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_2',
+                ],
+                'default' => "#44B772",
+                'selectors' => [
+                    '{{WRAPPER}} .mz-cart-btn .cart-shopping' => 'background: {{VALUE}}',
+                ],
+            ]
+        );
+
+
+        // border radius cart-shopping add to cart 2
+        $this->add_control(
+            'mz_cart_buttons_2_cart_shopping_border_radius',
+            [
+                'label' => esc_html__('انحنا باکس دکمه سبد خرید شماره 2', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 100,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-cart-btn .cart-shopping' => 'border-radius: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // Typography add to cart 2
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name' => 'mz_cart_buttons_2_typographi',
+                'selector' => '{{WRAPPER}} .mz-cart-btn .cart-title',
+                'condition' => [
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_2',
+                ],
+            ]
+        );
+
+        // End section controll add to cart 2
+        $this->end_controls_section();
+
+
+        // style add to cart 3
+        $this->start_controls_section(
+            'section_style_3_mz_cart_buttons',
+            [
+                'label' => esc_html__('استایل سبد خرید شماره 3', 'textdomain'),
+                'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+                'condition' => [
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_3',
+                ],
+            ]
+        );
+
+
+        // Width add to cart 3
+        $this->add_control(
+            'mz_cart_buttons_3_width',
+            [
+                'label' => esc_html__('عرض دکمه سبد خرید شماره 3', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'condition' => [
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_3',
+                ],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 190,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-cart-btn' => 'width: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // height add to cart 3
+        $this->add_control(
+            'mz_cart_buttons_3_height',
+            [
+                'label' => esc_html__('ارتفاع دکمه سبد خرید شماره 3', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'condition' => [
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_3',
+                ],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 60,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-cart-btn' => 'height: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // font-size icon add to cart 3
+        $this->add_control(
+            'mz_cart_buttons_3_font_size_icon',
+            [
+                'label' => esc_html__('سایز آیکن دکمه سبد خرید شماره 3', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'condition' => [
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_3',
+                ],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 20,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-cart-btn .cart-icon-1' => 'font-size: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // mz_cart_buttons 3 text color add to cart 3
+        $this->add_control(
+            'mz_cart_buttons_3_color',
+            [
+                'label' => esc_html__('رنگ پیشفرض متن دکمه سبد خرید شماره 3', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'default' => "#939394",
+                'condition' => [
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_3',
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-cart-btn .cart-title' => 'color: {{VALUE}}',
+                ],
+            ]
+        );
+
+
+        // mz_cart_buttons icon color add to cart 3
+        $this->add_control(
+            'mz_cart_buttons_3_div_color',
+            [
+                'label' => esc_html__('رنگ پیشفرض عدد سبد خرید شماره 3', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'default' => "#939394",
+                'condition' => [
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_3',
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-cart-btn .cart-text .cart-number' => 'color: {{VALUE}}',
+                ],
+            ]
+        );
+
+        // font-size text add to cart 3 number cart
+        $this->add_control(
+            'mz_cart_buttons_3_font_size_text',
+            [
+                'label' => esc_html__('سایز زیر متن دکمه سبد خرید شماره 3', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'condition' => [
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_3',
+                ],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 14,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-cart-btn .cart-text .cart-number' => 'font-size: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+
+        // background div number-cart add to cart 3
+        $this->add_control(
+            'mz_cart_buttons_3_background_color_cart_icon_1',
+            [
+                'label' => esc_html__('رنگ پس زمینه آیکن دکمه سبد خرید شماره 3', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'condition' => [
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_3',
+                ],
+                'default' => "#FFFFFF",
+                'selectors' => [
+                    '{{WRAPPER}} .mz-cart-btn .cart-icon-1' => 'background: {{VALUE}}',
+                ],
+            ]
+        );
+
+
+        // Width add to cart 3
+        $this->add_control(
+            'mz_cart_buttons_3_width_icon',
+            [
+                'label' => esc_html__('عرض دکمه آیکن سبد خرید شماره 3', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'condition' => [
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_3',
+                ],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 40,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-cart-btn .cart-icon-1' => 'width: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // height add to cart 3
+        $this->add_control(
+            'mz_cart_buttons_3_height_icon',
+            [
+                'label' => esc_html__('ارتفاع دکمه آیکن سبد خرید شماره 3', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'condition' => [
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_3',
+                ],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 40,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-cart-btn .cart-icon-1' => 'height: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // background div number-cart add to cart 3
+        $this->add_control(
+            'mz_cart_buttons_3_background_color_cart_icon_2',
+            [
+                'label' => esc_html__('رنگ پس زمینه دومین دکمه سبد خرید شماره 3', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'condition' => [
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_3',
+                ],
+                'default' => "#939394",
+                'selectors' => [
+                    '{{WRAPPER}} .mz-cart-btn .cart-icon-2' => 'color: {{VALUE}}',
+                ],
+            ]
+        );
+        //mz_cart_buttons_box_shadow_3 add to cart 3 cart icon
+        $this->add_group_control(
+            \Elementor\Group_Control_Box_Shadow::get_type(),
+            [
+                'name' => 'mz_cart_buttons_box_shadow_3',
+                'selector' => '{{WRAPPER}} .mz-cart-btn .cart-icon-1',
+            ]
+        );
+
+
+        // Typography add to cart 3
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name' => 'mz_cart_buttons_3_typographi',
+                'selector' => '{{WRAPPER}} .mz-cart-btn .cart-text .cart-title',
+                'condition' => [
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_3',
+                ],
+            ]
+        );
+        // font-size icon add to cart 3 cart icon 2
+        $this->add_control(
+            'mz_cart_buttons_3_font_size_cart_icon_2',
+            [
+                'label' => esc_html__('سایز آیکن دکمه سبد خرید شماره 3', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'condition' => [
+                    'custom_mz_cart_buttons_choose' => 'mz_cart_buttons_3',
+                ],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 14,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-cart-btn .cart-icon-2' => 'font-size: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // End section controll add to cart 3
+        $this->end_controls_section();
+    }
+
+    protected function render()
+    {
+        $settings = $this->get_settings_for_display();
+        $custom_mz_cart_buttons_title_label = $settings['custom_mz_cart_buttons_title_label'];
+        $custom_mz_cart_buttons_hide_icon = $settings['custom_mz_cart_buttons_hide_icon'];
+
+
+        switch ($settings['custom_mz_cart_buttons_choose']) {
+            case 'mz_cart_buttons_1':
+        ?>
+                <div class="mz-cart-btn item-cart">
+                    <span>
+                        3
+                    </span>
+                    <div class="cart-icon">
+                        <i class="<?php echo $settings["mz_cart_buttons_icon"]['value']; ?>"></i>
+                    </div>
+                    <?php
+                    if ($custom_mz_cart_buttons_title_label == "yes") {
+                    ?>
+                        <div class="cart-text">
+                            <?php echo $settings['mz_cart_buttons_title']; ?>
+                        </div>
+                    <?php } ?>
+                </div>
+            <?php
+                break;
+            case 'mz_cart_buttons_2':
+            ?>
+
+                <div class="mz-cart-btn flex-cart">
+                    <div class="cart-title">
+                        <?php echo $settings['mz_cart_buttons_title']; ?>
+                    </div>
+                    <div class="cart-shopping">
+
+                        <div class="number-cart">
+                            3
+                        </div>
+                        <?php
+                        if ($custom_mz_cart_buttons_hide_icon == "yes") {
+                        ?>
+                            <div class="cart-icon">
+                                <i class="<?php echo $settings["mz_cart_buttons_icon"]['value']; ?>"></i>
+                            </div>
+                        <?php } ?>
+
+
+                    </div>
+                </div>
+            <?php
+
+
+
+                break;
+            case 'mz_cart_buttons_3':
+
+            ?>
+                <div class="mz-cart-btn arrow-cart">
+                    <!-- Icon1 -->
+                    <?php
+                    if ($custom_mz_cart_buttons_hide_icon == "yes") {
+                    ?>
+                        <div class="cart-icon-1">
+                            <i class="<?php echo $settings["mz_cart_buttons_icon"]['value']; ?>"></i>
+                        </div>
+                    <?php } ?>
+
+                    <div class="cart-text">
+                        <div class="cart-title">
+                            <?php echo $settings['mz_cart_buttons_title']; ?>
+                        </div>
+                        <div class="cart-number">
+                            <?php echo $settings['mz_cart_buttons_title_3']; ?>
+                        </div>
+                    </div>
+                    <!-- ICON2 -->
+                    <div class="cart-icon-2">
+                        <i class="<?php echo $settings["mz_cart_buttons_3_icon"]['value']; ?>"></i>
+                    </div>
+
+                </div>
+        <?php
+                break;
+        }
+    }
+}
+
+/* --------- user account button widget---------*/
+
+class user_account_button extends \Elementor\Widget_Base
+{
+
+    public function get_name()
+    {
+        return 'user_account_button';
+    }
+
+    public function get_title()
+    {
+        return esc_html__('دکمه حساب کاربری', 'textdomain');
+    }
+
+    public function get_icon()
+    {
+        return 'eicon-button';
+    }
+
+    public function get_categories()
+    {
+        return ['mz-category'];
+    }
+
+    public function get_keywords()
+    {
+        return ['keyword', 'keyword'];
+    }
+
+    protected function register_controls()
+    {
+
+        $this->start_controls_section(
+            'section_content',
+            [
+                'label' => esc_html__('محتوا', 'textdomain'),
+                'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
+            ]
+        );
+
+        $this->add_control(
+            'user_account_button_text',
+            [
+                'label' => esc_html__('متن دکمه', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::TEXT,
+                'default' => esc_html__('حساب کاربری', 'textdomain'),
+            ]
+        );
+
+        $this->add_control(
+            'user_account_button_icon_condition',
+            [
+                'label' => esc_html__('تغییر آیکون', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SWITCHER,
+                'label_on' => esc_html__('بله', 'textdomain'),
+                'label_off' => esc_html__('خیر', 'textdomain'),
+                'return_value' => 'yes',
+                'default' => 'yes',
+            ]
+        );
+
+        $this->add_control(
+            'user_account_button_icon',
+            [
+                'label' => esc_html__(' دکمه آیکن', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::ICONS,
+                'condition' => [
+                    'user_account_button_icon_condition' => 'yes',
+                ],
+                'default' => [
+                    'value' => "mzicon-fi-rr-shopping-cart",
+                ],
+
+            ]
+        );
+
+        $this->end_controls_section();
+
+
+        $this->start_controls_section(
+            'section_style',
+            [
+                'label' => esc_html__('استایل', 'textdomain'),
+                'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name' => 'user_account_typography',
+                'selector' => '{{WRAPPER}} .mz-auth-btn.dark-text .btn-title',
+            ]
+        );
+
+        $this->add_control(
+            'mz_account_button__width',
+            [
+                'label' => esc_html__('عرض باکس', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px', '%', 'em', 'rem', 'custom'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                    '%' => [
+                        'min' => 0,
+                        'max' => 100,
+                    ],
+                ],
+                'default' => [
+                    'unit' => '%',
+                    'size' => 100,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-auth-btn.dark-text' => 'width: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'mz_account_button_height',
+            [
+                'label' => esc_html__('ارتفاع دکمه ', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px', '%', 'em', 'rem', 'custom'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                    '%' => [
+                        'min' => 0,
+                        'max' => 100,
+                    ],
+                ],
+                'default' => [
+                    'unit' => '%',
+                    'size' => 100,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-auth-btn.dark-text' => 'height: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'user_account_button_icon_width',
+            [
+                'label' => esc_html__('سایز آیکن', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 200,
+                        'step' => 1,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 20,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-auth-btn.dark-text .btn-icon' => 'font-size: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'mz_account_button_border_radius',
+            [
+                'label' => esc_html__('انحنای دکمه ', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 100,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-auth-btn.dark-text' => 'border-radius: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // box_shadow_user_account
+        $this->add_group_control(
+            \Elementor\Group_Control_Box_Shadow::get_type(),
+            [
+                'name' => 'box_shadow_user_account',
+                'selector' => '{{WRAPPER}} .mz-auth-btn',
+            ]
+        );
+
+
+        $this->start_controls_tabs('tabs_button_style');
+
+
+        $this->start_controls_tab(
+            'tab_button_normal',
+            [
+                'label' => esc_html__('عادی', 'textdomain'),
+            ]
+        );
+
+        $this->add_control(
+            'mz_account_button_background',
+            [
+                'label' => esc_html__('پس زمینه دکمه ', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .mz-auth-btn.dark-text' => 'background: {{VALUE}}',
+                ],
+                'default' => "#DFB568"
+            ]
+        );
+        $this->add_control(
+            'user_account_button_text_color',
+            [
+                'label' => esc_html__('رنگ متن دکمه ', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .mz-auth-btn.dark-text .btn-title' => 'color: {{VALUE}}',
+                ],
+                'default' => "#2F2F2E"
+            ]
+        );
+        $this->add_control(
+            'user_account_button_icon_color',
+            [
+                'label' => esc_html__('رنگ آیکن', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .mz-auth-btn.dark-text .btn-icon' => 'color: {{VALUE}}',
+                ],
+                'default' => "#2F2F2E"
+            ]
+        );
+
+        $this->end_controls_tab();
+
+        $this->start_controls_tab(
+            'tab_button_hover',
+            [
+                'label' => esc_html__('هاور', 'textdomain'),
+            ]
+        );
+        $this->add_control(
+            'button_text_color_hover',
+            [
+                'label' => esc_html__('رنگ متن (Hover)', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .mz-auth-btn.dark-text:hover .btn-title' => 'color: {{VALUE}};',
+                ],
+                'default' => "#FFFFFF"
+            ]
+        );
+        $this->add_control(
+            'button_background_color_hover',
+            [
+                'label' => esc_html__('رنگ پس زمینه (Hover)', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .mz-auth-btn.dark-text:hover' => 'background-color: {{VALUE}};',
+                ],
+                'default' => "#FFFFFF"
+            ]
+        );
+        $this->add_control(
+            'user_account_button_icon_color_hover',
+            [
+                'label' => esc_html__('رنگ آیکن', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .mz-auth-btn.dark-text:hover .btn-icon' => 'color: {{VALUE}}',
+                ],
+                'default' => "#FFFFFF"
+            ]
+        );
+        $this->end_controls_tab();
+
+        $this->end_controls_tabs();
+
+
+        $this->end_controls_section();
+    }
+
+    protected function render()
+    {
+        $settings = $this->get_settings_for_display();
+        $user_account_button_icon_condition = $settings['user_account_button_icon_condition'];
+
+        ?>
+
+        <link rel="stylesheet" href="<?php echo get_template_directory_uri(); ?> /mz-authentication-buttons/mz-authentication-buttons.css">
+        <!--mz-auth-btn dark-text-->
+        <button class="mz-auth-btn dark-text">
+            <?php
+            if ($user_account_button_icon_condition == "yes") {
+            ?>
+                <div class="btn-icon">
+                    <i class="<?php echo $settings["user_account_button_icon"]["value"] ?>"></i>
+                </div>
+            <?php } ?>
+
+
+            <span class="btn-title">
+                <?php echo $settings["user_account_button_text"] ?>
+            </span>
+        </button>
+
+    <?php
+    }
+}
+
+
+/* --------- social medias widget---------*/
+
+
+class social_medias_Widget extends \Elementor\Widget_Base
+{
+
+    public function get_name()
+    {
+        return 'social_medias_Widget';
+    }
+
+    public function get_title()
+    {
+        return esc_html__('آیکن شبکه های اجتماعی', 'textdomain');
+    }
+
+    public function get_icon()
+    {
+        return 'eicon-social-icons';
+    }
+
+    public function get_categories()
+    {
+        return ['mz-category'];
+    }
+
+    public function get_keywords()
+    {
+        return ['keyword', 'keyword'];
+    }
+
+    protected function register_controls()
+    {
+        $this->start_controls_section(
+            'content_section',
+            [
+                'label' => esc_html__('محتوا', 'textdomain'),
+                'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
+            ]
+        );
+
+        // Show icon social icons style
+        $this->add_control(
+            'social_show_condition',
+            [
+                'label' => esc_html__('نمایش آیکن شبکه اجتماعی', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SWITCHER,
+                'label_on' => esc_html__('بله', 'textdomain'),
+                'label_off' => esc_html__('خیر', 'textdomain'),
+                'return_value' => 'yes',
+                'default' => 'yes',
+            ]
+        );
+
+        // Show text social icons style
+        $this->add_control(
+            'social_show_text_condition',
+            [
+                'label' => esc_html__('نمایش متن شبکه اجتماعی', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SWITCHER,
+                'label_on' => esc_html__('بله', 'textdomain'),
+                'label_off' => esc_html__('خیر', 'textdomain'),
+                'return_value' => 'yes',
+                'default' => 'yes',
+            ]
+        );
+
+        $this->add_control(
+            'social_icon',
+            [
+                'label' => esc_html__('آیکن شبکه اجتماعی', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::ICONS,
+                'default' => [
+                    'value' => "mzicon-instagram2",
+                ],
+                'condition' => [
+                    'social_show_condition' => 'yes',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'social_url',
+            [
+                'label' => esc_html__('لینک باکس شبکه اجتماعی', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::URL,
+                'placeholder' => esc_html__('https://your-link.com', 'textdomain'),
+                'default' => [
+                    'url' => 'https://t.me/your_channel',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'social_icons_text',
+            [
+                'label' => esc_html__(' عنوان شبکه اجتماعی', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::TEXT,
+                'condition' => [
+                    'social_show_text_condition' => 'yes',
+                ],
+                'default' => 'اینستاگرام ما ',
+                'placeholder' => esc_html__('لطفا عنوان شبکه اجتماعی را وارد نمایید', 'textdomain'),
+            ]
+        );
+
+        $this->end_controls_section();
+
+        $this->start_controls_section(
+            'style_section',
+            [
+                'label' => esc_html__(' استایل', 'textdomain'),
+                'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name' => 'social_media_typography',
+                'selector' => '{{WRAPPER}} .mz-socialmedia',
+
+            ]
+        );
+
+        $this->add_control(
+            'social_style_text_color',
+            [
+                'label' => esc_html__('رنگ متن دکمه', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .mz-socialmedia' => 'color: {{VALUE}}',
+                ],
+                'default' => "#000000",
+                'condition' => [
+                    'social_show_text_condition' => 'yes',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'social_style_width',
+            [
+                'label' => esc_html__('عرض دکمه', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px', '%', 'em', 'rem', 'custom'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                    '%' => [
+                        'min' => 0,
+                        'max' => 100,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 130,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-socialmedia' => 'width: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'social_style_height',
+            [
+                'label' => esc_html__('ارتفاع دکمه ', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px', '%', 'em', 'rem', 'custom'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                    '%' => [
+                        'min' => 0,
+                        'max' => 100,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 45,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-socialmedia' => 'height: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // border radius social network style
+        $this->add_control(
+            'social_style_border_radius',
+            [
+                'label' => esc_html__('انحنای دکمه شبکه اجتماعی', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%', 'custom'],
+                'default' => [
+                    'top' => 100,
+                    'right' => 100,
+                    'bottom' => 100,
+                    'left' => 100,
+                    'unit' => 'em',
+                    'isLinked' => false,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-socialmedia' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // background social network style
+        $this->add_group_control(
+            \Elementor\Group_Control_Background::get_type(),
+            [
+                'name' => 'social_style_background',
+                'types' => ['classic', 'gradient', 'video'],
+                'selector' => '{{WRAPPER}} .mz-socialmedia',
+            ]
+        );
+
+        // gap social network style
+        $this->add_control(
+            'social_style_gap',
+            [
+                'label' => esc_html__('فاصله بین آیتم ها', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'condition' => [
+                    'social_show_condition' => 'yes',
+                    'social_show_text_condition' => 'yes',
+                ],
+                'size_units' => ['px', 'custom'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                    '%' => [
+                        'min' => 0,
+                        'max' => 100,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 5,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-socialmedia' => 'gap: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // width social network style
+        $this->add_control(
+            'social_style_icon_width',
+            [
+                'label' => esc_html__('سایز آیکن', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 200,
+                        'step' => 1,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 20,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-socialmedia i' => 'font-size: {{SIZE}}{{UNIT}};',
+                ],
+                'condition' => [
+                    'social_show_condition' => 'yes',
+                ],
+            ]
+        );
+
+        // color icon social network style
+        $this->add_control(
+            'social_style_icon_color',
+            [
+                'label' => esc_html__('رنگ آیکن', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .mz-socialmedia i' => 'color: {{VALUE}}',
+                ],
+                'default' => "#000000",
+                'condition' => [
+                    'social_show_condition' => 'yes',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Box_Shadow::get_type(),
+            [
+                'name' => 'social_style_shadow',
+                'selector' => '{{WRAPPER}} .mz-socialmedia',
+            ]
+        );
+
+        $this->end_controls_section();
+    }
+
+    protected function render()
+    {
+        $settings = $this->get_settings_for_display();
+        $social_show_condition = $settings['social_show_condition'];
+        $social_show_text_condition = $settings['social_show_text_condition'];
+
+    ?>
+
+        <link rel="stylesheet" href="<?php echo get_template_directory_uri(); ?>/mz-socialmedia/mz-socialmedia.css">
+
+        <a href="<?php echo $settings['social_url']['url']; ?>" class="mz-socialmedia ">
+            <?php
+            if ($social_show_condition == "yes") {
+            ?>
+                <i class="<?php echo $settings["social_icon"]["value"] ?>"></i>
+            <?php } ?>
+
+            <?php
+            if ($social_show_text_condition == "yes") {
+            ?>
+                <?php echo $settings['social_icons_text']; ?>
+            <?php } ?>
+
+        </a>
+
+    <?php
+    }
+}
+
+// mz Button Action widget
+class mzButtonAction extends \Elementor\Widget_Base
+{
+
+    public function get_name()
+    {
+        return 'mzButtonAction';
+    }
+
+    public function get_title()
+    {
+        return esc_html__('action btn', 'textdomain');
+    }
+
+    public function get_icon()
+    {
+        return 'mzicon-activity';
+    }
+
+    public function get_categories()
+    {
+        return ['mz-category'];
+    }
+
+    public function get_keywords()
+    {
+        return ['keyword', 'keyword'];
+    }
+
+    protected function register_controls()
+    {
+        $this->start_controls_section(
+            'content_section',
+            [
+                'label' => esc_html__('محتوا', 'textdomain'),
+                'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
+            ]
+        );
+
+        // mz btn action show content
+        $this->add_control(
+            'mzButtonAction_show_text_condition',
+            [
+                'label' => esc_html__('نمایش متن دکمه', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SWITCHER,
+                'label_on' => esc_html__('بله', 'textdomain'),
+                'label_off' => esc_html__('خیر', 'textdomain'),
+                'return_value' => 'yes',
+                'default' => 'yes',
+            ]
+        );
+
+        // mz btn action show icons content
+        $this->add_control(
+            'mzButtonAction_show_icon_condition',
+            [
+                'label' => esc_html__('نمایش آیکن دکمه', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SWITCHER,
+                'label_on' => esc_html__('بله', 'textdomain'),
+                'label_off' => esc_html__('خیر', 'textdomain'),
+                'return_value' => 'yes',
+                'default' => 'yes',
+            ]
+        );
+
+
+        // Custom icon mz btn actoin content 
+        $this->add_control(
+            'mzButtonAction_icon',
+            [
+                'label' => esc_html__('آیکن دکمه', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::ICONS,
+                'default' => [
+                    'value' => "mzicon-instagram1",
+                ],
+                'condition' => [
+                    'mzButtonAction_show_icon_condition' => 'yes',
+                ],
+            ]
+        );
+        // btn_action text content
+        $this->add_control(
+            'btn_action_text',
+            [
+                'label' => esc_html__('عنوان متن دکمه', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::TEXT,
+                'condition' => [
+                    'mzButtonAction_show_text_condition' => 'yes',
+                ],
+                'default' => 'علاقه مندی ها',
+                'placeholder' => esc_html__('لطفا عنوان دکمه را وارد نمایید', 'textdomain'),
+            ]
+        );
+
+        $this->end_controls_section();
+
+
+        $this->start_controls_section(
+            'style_section',
+            [
+                'label' => esc_html__('استایل', 'textdomain'),
+                'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+            ]
+        );
+
+        // custom btn action display flex grid style
+        $this->add_control(
+            'custom_btn_action_flex_direction',
+            [
+                'label' => esc_html__('موقعیت متن دکمه', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::CHOOSE,
+                'condition' => [
+                    'mzButtonAction_show_icon_condition' => 'yes',
+                    'mzButtonAction_show_text_condition' => 'yes',
+                ],
+                'options' => [
+                    'row' => [
+                        'title' => esc_html__('افقی', 'textdomain'),
+                        'icon' => 'eicon-arrow-down',
+                    ],
+                    'column' => [
+                        'title' => esc_html__('عمودی', 'textdomain'),
+                        'icon' => 'eicon-arrow-down',
+                    ],
+                ],
+                'default' => 'row',
+                'toggle' => true,
+                'selectors' => [
+                    '{{WRAPPER}} .mz-btn-action' => 'flex-direction:{{VALUE}}',
+                ],
+
+            ]
+        );
+
+
+
+
+        // Typographi btn action style
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name' => 'button_action_typography',
+                'selector' => '{{WRAPPER}} .mz-btn-action',
+
+            ]
+        );
+
+        // color text btn action style
+        $this->add_control(
+            'button_action_style_text_color',
+            [
+                'label' => esc_html__('رنگ متن دکمه', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .mz-btn-action' => 'color: {{VALUE}}',
+                ],
+                'default' => "#000000",
+                'condition' => [
+                    'mzButtonAction_show_text_condition' => 'yes',
+                ],
+            ]
+        );
+
+        // width btn action style
+        $this->add_control(
+            'button_action_style_width',
+            [
+                'label' => esc_html__('عرض دکمه', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px', '%', 'em', 'rem', 'custom'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                    '%' => [
+                        'min' => 0,
+                        'max' => 100,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 130,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-btn-action' => 'width: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // height btn action style
+        $this->add_control(
+            'button_action_style_height',
+            [
+                'label' => esc_html__('ارتفاع دکمه ', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px', '%', 'em', 'rem', 'custom'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                    '%' => [
+                        'min' => 0,
+                        'max' => 100,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 45,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-btn-action' => 'height: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // border radius button_action style
+        $this->add_control(
+            'button_action_style_border_radius',
+            [
+                'label' => esc_html__('انحنای دکمه', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', 'custom'],
+                'default' => [
+                    'top' => 100,
+                    'right' => 100,
+                    'bottom' => 100,
+                    'left' => 100,
+                    'unit' => 'em',
+                    'isLinked' => false,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-btn-action' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // background button_action style
+        $this->add_control(
+            'button_action_style_background',
+            [
+                'label' => esc_html__('رنگ پس زمینه دکمه', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .mz-btn-action' => 'background-color: {{VALUE}};',
+                ],
+                'default' => "#949494"
+            ]
+        );
+
+        // gap button_action style
+        $this->add_control(
+            'button_action_style_gap',
+            [
+                'label' => esc_html__('فاصله بین آیتم ها', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'condition' => [
+                    'mzButtonAction_show_icon_condition' => 'yes',
+                ],
+                'size_units' => ['px', 'custom'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 1,
+                    ],
+                    '%' => [
+                        'min' => 0,
+                        'max' => 100,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 5,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-btn-action' => 'gap: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // font-size icon button_action style
+        $this->add_control(
+            'button_action_style_icon_font_size',
+            [
+                'label' => esc_html__('سایز آیکن', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 200,
+                        'step' => 1,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 20,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .mz-btn-action i' => 'font-size: {{SIZE}}{{UNIT}};',
+                ],
+                'condition' => [
+                    'mzButtonAction_show_icon_condition' => 'yes',
+                ],
+            ]
+        );
+
+        // color icon button_action style
+        $this->add_control(
+            'button_action_style_icon_color',
+            [
+                'label' => esc_html__('رنگ آیکن', 'textdomain'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .mz-btn-action i' => 'color: {{VALUE}}',
+                ],
+                'default' => "#000000",
+                'condition' => [
+                    'mzButtonAction_show_icon_condition' => 'yes',
+                ],
+            ]
+        );
+
+        // box shadow button_action style
+        $this->add_group_control(
+            \Elementor\Group_Control_Box_Shadow::get_type(),
+            [
+                'name' => 'button_action_style_box_shadow',
+                'selector' => '{{WRAPPER}} .mz-btn-action',
+            ]
+        );
+
+        $this->end_controls_section();
+    }
+
+    protected function render()
+    {
+        $settings = $this->get_settings_for_display();
+        $mzButtonAction_show_text_condition = $settings['mzButtonAction_show_text_condition'];
+        $mzButtonAction_show_icon_condition = $settings['mzButtonAction_show_icon_condition'];
+
+    ?>
+        <div class="mz-btn-action">
+
+            <?php if ($mzButtonAction_show_icon_condition === 'yes') { ?>
+                <i class="<?php echo $settings['mzButtonAction_icon']['value']; ?>"></i>
+            <?php } ?>
+
+            <?php if ($mzButtonAction_show_text_condition === 'yes') { ?>
+                <?php echo $settings['btn_action_text']; ?>
+            <?php } ?>
+
+        </div>
+<?php
+    }
+}
